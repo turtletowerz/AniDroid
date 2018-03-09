@@ -3159,6 +3159,9 @@ namespace AniDroid
 			// aapt resource value: 0x7f0700fc
 			public const int List_RecyclerView = 2131165436;
 			
+			// aapt resource value: 0x7f070120
+			public const int LoadableContainer_ProgressBarContainer = 2131165472;
+			
 			// aapt resource value: 0x7f0700a6
 			public const int Loading_CoordLayout = 2131165350;
 			
@@ -3228,32 +3231,32 @@ namespace AniDroid
 			// aapt resource value: 0x7f070104
 			public const int Media_Title = 2131165444;
 			
-			// aapt resource value: 0x7f070122
-			public const int Menu_AniListObject_Favorite = 2131165474;
-			
 			// aapt resource value: 0x7f070123
-			public const int Menu_AniListObject_Share = 2131165475;
+			public const int Menu_AniListObject_Favorite = 2131165475;
 			
 			// aapt resource value: 0x7f070124
-			public const int Menu_Error_Refresh = 2131165476;
-			
-			// aapt resource value: 0x7f070127
-			public const int Menu_Navigation_Anime = 2131165479;
-			
-			// aapt resource value: 0x7f070129
-			public const int Menu_Navigation_Browse = 2131165481;
-			
-			// aapt resource value: 0x7f070126
-			public const int Menu_Navigation_Discover = 2131165478;
+			public const int Menu_AniListObject_Share = 2131165476;
 			
 			// aapt resource value: 0x7f070125
-			public const int Menu_Navigation_Home = 2131165477;
+			public const int Menu_Error_Refresh = 2131165477;
 			
 			// aapt resource value: 0x7f070128
-			public const int Menu_Navigation_Manga = 2131165480;
+			public const int Menu_Navigation_Anime = 2131165480;
 			
 			// aapt resource value: 0x7f07012a
-			public const int Menu_Navigation_TorrentSearch = 2131165482;
+			public const int Menu_Navigation_Browse = 2131165482;
+			
+			// aapt resource value: 0x7f070127
+			public const int Menu_Navigation_Discover = 2131165479;
+			
+			// aapt resource value: 0x7f070126
+			public const int Menu_Navigation_Home = 2131165478;
+			
+			// aapt resource value: 0x7f070129
+			public const int Menu_Navigation_Manga = 2131165481;
+			
+			// aapt resource value: 0x7f07012b
+			public const int Menu_Navigation_TorrentSearch = 2131165483;
 			
 			// aapt resource value: 0x7f0700fd
 			public const int Navigation_Container = 2131165437;
@@ -3609,8 +3612,8 @@ namespace AniDroid
 			// aapt resource value: 0x7f070073
 			public const int list_item = 2131165299;
 			
-			// aapt resource value: 0x7f070121
-			public const int masked = 2131165473;
+			// aapt resource value: 0x7f070122
+			public const int masked = 2131165474;
 			
 			// aapt resource value: 0x7f0700d6
 			public const int media_actions = 2131165398;
@@ -3888,8 +3891,8 @@ namespace AniDroid
 			// aapt resource value: 0x7f070016
 			public const int view_offset_helper = 2131165206;
 			
-			// aapt resource value: 0x7f070120
-			public const int visible = 2131165472;
+			// aapt resource value: 0x7f070121
+			public const int visible = 2131165473;
 			
 			// aapt resource value: 0x7f070041
 			public const int withText = 2131165249;
@@ -4234,6 +4237,9 @@ namespace AniDroid
 			
 			// aapt resource value: 0x7f03005b
 			public const int Widget_ExpandableText = 2130903131;
+			
+			// aapt resource value: 0x7f03005c
+			public const int Widget_LoadableContainer = 2130903132;
 			
 			static Layout()
 			{

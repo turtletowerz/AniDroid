@@ -224,6 +224,7 @@
     <Compile Include="Utils\Storage\SettingsStorage.cs" />
     <Compile Include="Widgets\DataRow.cs" />
     <Compile Include="Widgets\ExpandableText.cs" />
+    <Compile Include="Widgets\LoadableContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -323,6 +324,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\Fragment_Discover.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\Widget_LoadableContainer.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
