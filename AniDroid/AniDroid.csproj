@@ -226,6 +226,7 @@
     <Compile Include="Utils\Integration\AniDroidAuthCodeResolver.cs" />
     <Compile Include="Utils\Interfaces\IAniDroidSettings.cs" />
     <Compile Include="Utils\Storage\SettingsStorage.cs" />
+    <Compile Include="Widgets\AnimatedFloatingActionButton.cs" />
     <Compile Include="Widgets\DataRow.cs" />
     <Compile Include="Widgets\ExpandableText.cs" />
   </ItemGroup>
@@ -446,6 +447,10 @@
     <ProjectReference Include="..\AniDroid.Torrent\AniDroid.Torrent.csproj">
       <Project>{6e34b7af-7e77-4f94-b56a-fdf1462edc34}</Project>
       <Name>AniDroid.Torrent</Name>
+    </ProjectReference>
+    <ProjectReference Include="AndroidBindings\Binding_MaterialSheetFab\Binding_MaterialSheetFab.csproj">
+      <Project>{3C8AD1AB-E9D6-4ABC-8130-CE7F2F2FDD73}</Project>
+      <Name>Binding_MaterialSheetFab</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

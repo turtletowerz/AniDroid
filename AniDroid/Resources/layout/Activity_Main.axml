@@ -25,7 +25,7 @@
         android:id="@+id/Main_FragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <android.support.design.widget.FloatingActionButton
+    <AniDroid.Widgets.AnimatedFloatingActionButton
         android:id="@+id/Main_SearchFab"
         app:srcCompat="@drawable/ic_search_white_24px"
         style="?FabLarge_Style"
@@ -36,7 +36,16 @@
         android:layout_gravity="bottom|right"
         android:layout_marginBottom="12dp"
         android:layout_marginRight="16dp" />
+    <com.gordonwong.materialsheetfab.DimOverlayFrameLayout
+      android:id="@+id/Main_FabOverlay"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
   </android.support.design.widget.CoordinatorLayout>
+  <android.support.v7.widget.CardView
+      android:id="@+id/Main_SearchDialog"
+      android:layout_width="300dp"
+      android:layout_height="400dp">
+  </android.support.v7.widget.CardView>
   <android.support.design.widget.NavigationView
       android:layout_width="wrap_content"
       android:layout_height="match_parent"

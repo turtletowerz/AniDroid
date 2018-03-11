@@ -1,0 +1,5 @@
+﻿<metadata>
+  <!-- AnimatedFab -->
+  <attr path="/api/package[@name='com.gordonwong.materialsheetfab']/interface[@name='AnimatedFab']/method[@name='show']/parameter[@name='p0']" name="name">translationX</attr>
+  <attr path="/api/package[@name='com.gordonwong.materialsheetfab']/interface[@name='AnimatedFab']/method[@name='show']/parameter[@name='p1']" name="name">translationY</attr>
+</metadata>

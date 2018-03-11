@@ -22,6 +22,8 @@ using AniDroid.SearchResults;
 using AniDroid.Settings;
 using AniDroid.TorrentSearch;
 using AniDroid.Utils;
+using AniDroid.Widgets;
+using Com.Gordonwong.Materialsheetfab;
 using Ninject;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
 
@@ -39,12 +41,13 @@ namespace AniDroid.Main
         [InjectView(Resource.Id.Main_Toolbar)]
         private Toolbar _toolbar;
         [InjectView(Resource.Id.Main_SearchFab)]
-        private FloatingActionButton _searchButton;
+        private AnimatedFloatingActionButton _searchButton;
 
         private Toast _exitToast;
         private Action _navClosedAction;
         private BaseAniDroidFragment _currentFragment;
         private bool _fragmentBeingReplaced;
+        private MaterialSheetFab _materialSheetFab;
 
         protected override IReadOnlyKernel Kernel => new StandardKernel(new ApplicationModule<IMainView, MainActivity>(this));
 
@@ -97,6 +100,7 @@ namespace AniDroid.Main
 
             SetupToolbar();
             SetupNavigation();
+            SetupFab();
 
             await CreatePresenter(savedInstanceState);
         }
@@ -125,6 +129,16 @@ namespace AniDroid.Main
                 _currentFragment = null;
                 Recreate();
             }
+        }
+
+        private void SetupFab()
+        {
+            var dialog = FindViewById(Resource.Id.Main_SearchDialog);
+            var overlay = FindViewById(Resource.Id.Main_FabOverlay);
+            var dialogColor = GetThemedColor(Resource.Attribute.Primary);
+            var fabColor = GetThemedColor(Resource.Attribute.Secondary);
+
+
         }
 
         #region Toolbar

@@ -6,11 +6,14 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AniDroid", "AniDroid\AniDroid.csproj", "{A25395EE-107E-4EEF-88F2-AA17E94CDB44}"
 	ProjectSection(ProjectDependencies) = postProject
 		{49FB1693-B542-4C68-82F9-19762A6AFB29} = {49FB1693-B542-4C68-82F9-19762A6AFB29}
+		{6E34B7AF-7E77-4F94-B56A-FDF1462EDC34} = {6E34B7AF-7E77-4F94-B56A-FDF1462EDC34}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AniDroid.AniList", "AniDroid.AniList\AniDroid.AniList\AniDroid.AniList.csproj", "{49FB1693-B542-4C68-82F9-19762A6AFB29}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AniDroid.Torrent", "AniDroid.Torrent\AniDroid.Torrent.csproj", "{6E34B7AF-7E77-4F94-B56A-FDF1462EDC34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Binding_MaterialSheetFab", "AniDroid\AndroidBindings\Binding_MaterialSheetFab\Binding_MaterialSheetFab.csproj", "{3C8AD1AB-E9D6-4ABC-8130-CE7F2F2FDD73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +35,10 @@ Global
 		{6E34B7AF-7E77-4F94-B56A-FDF1462EDC34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E34B7AF-7E77-4F94-B56A-FDF1462EDC34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E34B7AF-7E77-4F94-B56A-FDF1462EDC34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C8AD1AB-E9D6-4ABC-8130-CE7F2F2FDD73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C8AD1AB-E9D6-4ABC-8130-CE7F2F2FDD73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C8AD1AB-E9D6-4ABC-8130-CE7F2F2FDD73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C8AD1AB-E9D6-4ABC-8130-CE7F2F2FDD73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
