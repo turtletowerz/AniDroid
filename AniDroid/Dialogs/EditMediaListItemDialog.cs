@@ -17,6 +17,7 @@ using Android.Widget;
 using AniDroid.AniList;
 using AniDroid.AniList.Dto;
 using AniDroid.AniList.Models;
+using AniDroid.AniList.Utils;
 using AniDroid.AniListObject.Media;
 using AniDroid.Base;
 using AniDroid.Settings;
@@ -30,7 +31,7 @@ namespace AniDroid.Dialogs
     {
         public static void Create(BaseAniDroidActivity context, IAniListMediaListEditPresenter presenter, Media media, Media.MediaList mediaList, User.UserMediaListOptions mediaListOptions)
         {
-            var dialog = new EditMediaListItemDialogFragment(presenter, media, mediaList, mediaListOptions) {Cancelable = true};
+            var dialog = EditMediaListItemDialogFragment.CreateFragment(presenter, media, mediaList, mediaListOptions);
 
 //            dialog.Show(context.SupportFragmentManager, "EditMediaDialog");
 
@@ -41,14 +42,17 @@ namespace AniDroid.Dialogs
 
         public class EditMediaListItemDialogFragment : AppCompatDialogFragment
         {
+            private const string MediaKey = "MEDIA";
+            private const string MediaListKey = "MEDIA_LIST";
+            private const string MediaListOptionsKey = "MEDIA_LIST_OPTIONS";
             private const int DefaultMaxPickerValue = 9999;
 
             private readonly IAniListMediaListEditPresenter _presenter;
-            private readonly Media _media;
-            private readonly Media.MediaList _mediaList;
-            private readonly User.UserMediaListOptions _mediaListOptions;
-            private readonly List<string> _mediaStatusList;
-            private readonly HashSet<string> _customLists;
+            private Media _media;
+            private Media.MediaList _mediaList;
+            private User.UserMediaListOptions _mediaListOptions;
+            private List<string> _mediaStatusList;
+            private HashSet<string> _customLists;
             private new BaseAniDroidActivity Activity => base.Activity as BaseAniDroidActivity;
             private bool _isPrivate;
             private bool _hideFromStatusLists;
@@ -60,17 +64,43 @@ namespace AniDroid.Dialogs
             private Picker _repeatPicker;
             private EditText _notesView;
 
-            public EditMediaListItemDialogFragment(IAniListMediaListEditPresenter presenter, Media media, Media.MediaList mediaList, User.UserMediaListOptions mediaListOptions)
+            public static EditMediaListItemDialogFragment CreateFragment(IAniListMediaListEditPresenter presenter, Media media, Media.MediaList mediaList, User.UserMediaListOptions mediaListOptions)
             {
-                _presenter = presenter;
-                _media = media;
-                _mediaList = mediaList;
-                _mediaListOptions = mediaListOptions;
-                _isPrivate = mediaList?.Private ?? false;
-                _hideFromStatusLists = mediaList?.HiddenFromStatusLists ?? false;
-                _customLists = (mediaList?.CustomLists?.Where(x => x.Enabled).Select(x => x.Name).ToList() ??
-                               new List<string>()).ToHashSet();
+                var retFrag = new EditMediaListItemDialogFragment();
 
+                var bundle = new Bundle(5);
+                bundle.PutString(MediaKey, AniListJsonSerializer.Default.Serialize(media));
+                bundle.PutString(MediaListOptionsKey, AniListJsonSerializer.Default.Serialize(mediaListOptions));
+
+                if (mediaList != null)
+                {
+                    bundle.PutString(MediaListKey, AniListJsonSerializer.Default.Serialize(mediaList));
+                }
+
+                //_presenter = presenter;
+
+                retFrag.Arguments = bundle;
+                return retFrag;
+            }
+
+            public override void OnCreate(Bundle savedInstanceState)
+            {
+                base.OnCreate(savedInstanceState);
+
+                _media = AniListJsonSerializer.Default.Deserialize<Media>(Arguments.GetString(MediaKey));
+                _mediaListOptions = AniListJsonSerializer.Default.Deserialize<User.UserMediaListOptions>(Arguments.GetString(MediaListOptionsKey));
+
+                if (Arguments.ContainsKey(MediaListKey))
+                {
+                    _mediaList =
+                        AniListJsonSerializer.Default.Deserialize<Media.MediaList>(Arguments.GetString(MediaListKey));
+                    
+                }
+
+                _isPrivate = _mediaList?.Private ?? false;
+                _hideFromStatusLists = _mediaList?.HiddenFromStatusLists ?? false;
+                _customLists = (_mediaList?.CustomLists?.Where(x => x.Enabled).Select(x => x.Name).ToList() ??
+                                new List<string>()).ToHashSet();
                 _mediaStatusList = AniListEnum.GetEnumValues<Media.MediaListStatus>().OrderBy(x => x.Index)
                     .Select(x => x.DisplayValue).ToList();
             }
@@ -298,6 +328,7 @@ namespace AniDroid.Dialogs
                 }
 
                 Dismiss();
+
                 await _presenter.SaveMediaListEntry(editDto);
             }
         }

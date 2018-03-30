@@ -227,5 +227,10 @@ namespace AniDroid.MediaList
 
             return retList;
         }
+
+        public override void OnActivityResult(int requestCode, int resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+        }
     }
 }
