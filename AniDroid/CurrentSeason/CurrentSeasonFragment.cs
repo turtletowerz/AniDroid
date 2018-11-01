@@ -24,12 +24,14 @@ namespace AniDroid.CurrentSeason
     {
         private LinearLayout _listContainer;
         private DiscoverMediaRecyclerAdapter _currentSeasonTvRecyclerAdapter;
-        private DiscoverMediaRecyclerAdapter _currentSeasonMoviewRecyclerAdapter;
-        private DiscoverMediaRecyclerAdapter _currentSeasonOvaOnaRecyclerAdapter;
         private DiscoverMediaRecyclerAdapter _currentSeasonLeftoversRecyclerAdapter;
+        private DiscoverMediaRecyclerAdapter _currentSeasonTvShortRecyclerAdapter;
+        private DiscoverMediaRecyclerAdapter _currentSeasonMovieRecyclerAdapter;
+        private DiscoverMediaRecyclerAdapter _currentSeasonOvaOnaSpecialRecyclerAdapter;
 
         private static CurrentSeasonFragment _instance;
 
+        public override bool HasMenu => true;
         public override string FragmentName => "CURRENTSEASON_FRAGMENT";
         protected override IReadOnlyKernel Kernel => new StandardKernel(new ApplicationModule<ICurrentSeasonView, CurrentSeasonFragment>(this));
 
@@ -84,27 +86,62 @@ namespace AniDroid.CurrentSeason
 
         public void ShowCurrentTv(IAsyncEnumerable<OneOf<IPagedData<Media>, IAniListError>> mediaEnumerable)
         {
-            var currentTvView = new SideScrollingList(Activity);
-            currentTvView.LabelText = "TV";
-            currentTvView.RecyclerAdapter = _currentSeasonTvRecyclerAdapter =
-                new DiscoverMediaRecyclerAdapter(Activity, mediaEnumerable);
+            var currentTvView = new SideScrollingList(Activity)
+            {
+                LabelText = "Tv",
+                RecyclerAdapter = _currentSeasonTvRecyclerAdapter =
+                    new DiscoverMediaRecyclerAdapter(Activity, mediaEnumerable)
+            };
 
             _listContainer.AddView(currentTvView);
         }
 
-        public void ShowCurrentMovies(IAsyncEnumerable<OneOf<IPagedData<Media>, IAniListError>> mediaEnumerable)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void ShowCurrentOvaOna(IAsyncEnumerable<OneOf<IPagedData<Media>, IAniListError>> mediaEnumerable)
-        {
-            //throw new NotImplementedException();
-        }
-
         public void ShowCurrentLeftovers(IAsyncEnumerable<OneOf<IPagedData<Media>, IAniListError>> mediaEnumerable)
         {
-            //throw new NotImplementedException();
+            var leftoversView = new SideScrollingList(Activity)
+            {
+                LabelText = "Leftovers",
+                RecyclerAdapter = _currentSeasonLeftoversRecyclerAdapter =
+                    new DiscoverMediaRecyclerAdapter(Activity, mediaEnumerable)
+            };
+
+            _listContainer.AddView(leftoversView);
+        }
+
+        public void ShowCurrentTvShort(IAsyncEnumerable<OneOf<IPagedData<Media>, IAniListError>> mediaEnumerable)
+        {
+            var currentTvShortView = new SideScrollingList(Activity)
+            {
+                LabelText = "Tv Short",
+                RecyclerAdapter = _currentSeasonTvShortRecyclerAdapter =
+                    new DiscoverMediaRecyclerAdapter(Activity, mediaEnumerable)
+            };
+
+            _listContainer.AddView(currentTvShortView);
+        }
+
+        public void ShowCurrentMovies(IAsyncEnumerable<OneOf<IPagedData<Media>, IAniListError>> mediaEnumerable)
+        {
+            var currentMovieView = new SideScrollingList(Activity)
+            {
+                LabelText = "Movie",
+                RecyclerAdapter = _currentSeasonMovieRecyclerAdapter =
+                    new DiscoverMediaRecyclerAdapter(Activity, mediaEnumerable)
+            };
+
+            _listContainer.AddView(currentMovieView);
+        }
+
+        public void ShowCurrentOvaOnaSpecial(IAsyncEnumerable<OneOf<IPagedData<Media>, IAniListError>> mediaEnumerable)
+        {
+            var currentOvaOnaSpecialView = new SideScrollingList(Activity)
+            {
+                LabelText = "OVA / ONA / Special",
+                RecyclerAdapter = _currentSeasonOvaOnaSpecialRecyclerAdapter =
+                    new DiscoverMediaRecyclerAdapter(Activity, mediaEnumerable)
+            };
+
+            _listContainer.AddView(currentOvaOnaSpecialView);
         }
     }
 }
