@@ -28,7 +28,7 @@ using OneOf;
 
 namespace AniDroid.Adapters.AniListActivityAdapters
 {
-    public class AniListActivityRecyclerAdapter : LazyLoadingRecyclerViewAdapter<AniListActivity>
+    public class AniListActivityRecyclerAdapterOld : LazyLoadingRecyclerViewAdapter<AniListActivity>
     {
         private readonly IAniListActivityPresenter _presenter;
         private readonly string _userNameColorHex;
@@ -36,7 +36,7 @@ namespace AniDroid.Adapters.AniListActivityAdapters
         private readonly int? _userId;
         private readonly Color _defaultIconColor;
 
-        public AniListActivityRecyclerAdapter(BaseAniDroidActivity context, IAniListActivityPresenter presenter,
+        public AniListActivityRecyclerAdapterOld(BaseAniDroidActivity context, IAniListActivityPresenter presenter,
             IAsyncEnumerable<OneOf<IPagedData<AniListActivity>, IAniListError>> enumerable, int? currentUserId) : base(context, enumerable, RecyclerCardType.Custom)
         {
             _presenter = presenter;
@@ -47,7 +47,7 @@ namespace AniDroid.Adapters.AniListActivityAdapters
             CustomCardUseItemDecoration = true;
         }
 
-        public AniListActivityRecyclerAdapter(BaseAniDroidActivity context, AniListActivityRecyclerAdapter adapter) :
+        public AniListActivityRecyclerAdapterOld(BaseAniDroidActivity context, AniListActivityRecyclerAdapterOld adapter) :
             base(context, adapter)
         {
             _presenter = adapter._presenter;
@@ -60,55 +60,64 @@ namespace AniDroid.Adapters.AniListActivityAdapters
 
         public override void BindCustomViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            var viewHolder = holder as AniListActivityViewHolder;
-            var item = Items[position];
-
-            viewHolder.Timestamp.Text = item.GetAgeString(item.CreatedAt);
-
-            if (item.ReplyCount > 0)
+            try
             {
-                viewHolder.ReplyCountContainer.Visibility = ViewStates.Visible;
-                viewHolder.ReplyCount.Text = item.ReplyCount.ToString();
+                var viewHolder = holder as AniListActivityViewHolderOld;
+                var item = Items[position];
+
+                viewHolder.Timestamp.Text = item.GetAgeString(item.CreatedAt);
+
+                if (item.ReplyCount > 0)
+                {
+                    viewHolder.ReplyCountContainer.Visibility = ViewStates.Visible;
+                    viewHolder.ReplyCount.Text = item.ReplyCount.ToString();
+                }
+                else
+                {
+                    viewHolder.ReplyCountContainer.Visibility = ViewStates.Gone;
+                }
+
+                viewHolder.LikeCount.Text = item.Likes?.Count.ToString();
+                viewHolder.LikeIcon.ImageTintList = ColorStateList.ValueOf(item.Likes?.Any(x => x.Id == _userId) == true
+                    ? Color.Crimson
+                    : _defaultIconColor);
+                viewHolder.ReplyLikeContainer.SetTag(Resource.Id.Object_Position, position);
+                viewHolder.ReplyLikeContainer.Click -= ShowReplyDialog;
+                viewHolder.ReplyLikeContainer.Click += ShowReplyDialog;
+
+                viewHolder.Image.SetTag(Resource.Id.Object_Position, position);
+                viewHolder.Image.Click -= ImageClick;
+                viewHolder.Image.Click += ImageClick;
+
+                viewHolder.Container.SetTag(Resource.Id.Object_Position, position);
+                viewHolder.Container.Click -= RowClick;
+                viewHolder.Container.Click += RowClick;
+                viewHolder.Container.LongClick -= RowLongClick;
+                viewHolder.Container.LongClick += RowLongClick;
+
+                if (item.Type == AniListActivity.ActivityType.Text)
+                {
+                    BindTextActivityViewHolder(viewHolder, item);
+                }
+                else if (item.Type == AniListActivity.ActivityType.Message)
+                {
+                    BindMessageActivityViewHolder(viewHolder, item);
+                }
+                else if (item.Type == AniListActivity.ActivityType.AnimeList ||
+                         item.Type == AniListActivity.ActivityType.MangaList)
+                {
+                    BindListActivityViewHolder(viewHolder, item);
+                }
             }
-            else
+            catch (Exception e)
             {
-                viewHolder.ReplyCountContainer.Visibility = ViewStates.Gone;
-            }
 
-            viewHolder.LikeCount.Text = item.Likes?.Count.ToString();
-            viewHolder.LikeIcon.ImageTintList = ColorStateList.ValueOf(item.Likes?.Any(x => x.Id == _userId) == true ? Color.Crimson : _defaultIconColor);
-            viewHolder.ReplyLikeContainer.SetTag(Resource.Id.Object_Position, position);
-            viewHolder.ReplyLikeContainer.Click -= ShowReplyDialog;
-            viewHolder.ReplyLikeContainer.Click += ShowReplyDialog;
-
-            viewHolder.Image.SetTag(Resource.Id.Object_Position, position);
-            viewHolder.Image.Click -= ImageClick;
-            viewHolder.Image.Click += ImageClick;
-
-            viewHolder.Container.SetTag(Resource.Id.Object_Position, position);
-            viewHolder.Container.Click -= RowClick;
-            viewHolder.Container.Click += RowClick;
-            viewHolder.Container.LongClick -= RowLongClick;
-            viewHolder.Container.LongClick += RowLongClick;
-
-            if (item.Type == AniListActivity.ActivityType.Text)
-            {
-                BindTextActivityViewHolder(viewHolder, item);
-            }
-            else if (item.Type == AniListActivity.ActivityType.Message)
-            {
-                BindMessageActivityViewHolder(viewHolder, item);
-            }
-            else if (item.Type == AniListActivity.ActivityType.AnimeList ||
-                     item.Type == AniListActivity.ActivityType.MangaList)
-            {
-                BindListActivityViewHolder(viewHolder, item);
             }
         }
         
         public override RecyclerView.ViewHolder CreateCustomViewHolder(ViewGroup parent, int viewType)
         {
-            var holder = new AniListActivityViewHolder(
+            var holder = new AniListActivityViewHolderOld(
                 Context.LayoutInflater.Inflate(Resource.Layout.View_AniListActivityItem, parent, false));
 
             if (!_userId.HasValue)
@@ -119,7 +128,7 @@ namespace AniDroid.Adapters.AniListActivityAdapters
             return holder;
         }
 
-        private void BindTextActivityViewHolder(AniListActivityViewHolder viewHolder, AniListActivity item)
+        private void BindTextActivityViewHolder(AniListActivityViewHolderOld viewHolder, AniListActivity item)
         {
             viewHolder.Title.TextFormatted = BaseAniDroidActivity.FromHtml($"<b><font color='{_userNameColorHex}'>{item.User.Name}</font></b>");
             viewHolder.ContentText.TextFormatted = BaseAniDroidActivity.FromHtml(item.Text);
@@ -129,9 +138,9 @@ namespace AniDroid.Adapters.AniListActivityAdapters
             Context.LoadImage(viewHolder.Image, item.User.Avatar.Large);
         }
 
-        private void BindMessageActivityViewHolder(AniListActivityViewHolder viewHolder, AniListActivity item)
+        private void BindMessageActivityViewHolder(AniListActivityViewHolderOld viewHolder, AniListActivity item)
         {
-            viewHolder.Title.TextFormatted = BaseAniDroidActivity.FromHtml($"<b><font color='{_userNameColorHex}'>{item.Messenger.Name}</font></b>");
+            viewHolder.Title.TextFormatted = BaseAniDroidActivity.FromHtml($"<b><font color='{_userNameColorHex}'>{item.Messenger?.Name}</font></b>");
             viewHolder.ContentText.TextFormatted = BaseAniDroidActivity.FromHtml(item.Message);
             viewHolder.ContentText.Visibility = ViewStates.Visible;
             viewHolder.ContentImageContainer.Visibility = ViewStates.Gone;
@@ -139,7 +148,7 @@ namespace AniDroid.Adapters.AniListActivityAdapters
             Context.LoadImage(viewHolder.Image, item.Messenger.Avatar.Large);
         }
 
-        private void BindListActivityViewHolder(AniListActivityViewHolder viewHolder, AniListActivity item)
+        private void BindListActivityViewHolder(AniListActivityViewHolderOld viewHolder, AniListActivity item)
         {
             viewHolder.Title.TextFormatted = BaseAniDroidActivity.FromHtml($"<b><font color='{_userNameColorHex}'>{item.User.Name}</font></b> {item.Status} {(!string.IsNullOrWhiteSpace(item.Progress) ? $"{item.Progress} of" : "")} <b><font color='{_actionColorHex}'>{item.Media.Title.UserPreferred}</font></b>");
             viewHolder.ContentText.Visibility = ViewStates.Gone;
@@ -231,7 +240,7 @@ namespace AniDroid.Adapters.AniListActivityAdapters
             await _presenter.PostActivityReplyAsync(activityItem, activityItemPosition, text);
         }
 
-        public class AniListActivityViewHolder : RecyclerView.ViewHolder
+        public class AniListActivityViewHolderOld : RecyclerView.ViewHolder
         {
             public View Container { get; set; }
             public ImageView Image { get; set; }
@@ -247,7 +256,7 @@ namespace AniDroid.Adapters.AniListActivityAdapters
             public ImageView LikeIcon { get; set; }
             public View ReplyButton { get; set; }
 
-            public AniListActivityViewHolder(View view) : base(view)
+            public AniListActivityViewHolderOld(View view) : base(view)
             {
                 Container = view.FindViewById(Resource.Id.AniListActivity_Container);
                 Image = view.FindViewById<ImageView>(Resource.Id.AniListActivity_Image);

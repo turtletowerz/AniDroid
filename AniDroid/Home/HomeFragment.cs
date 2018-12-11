@@ -5,12 +5,15 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using AniDroid.Adapters.AniListActivityAdapters;
+using AniDroid.Adapters.UserAdapters;
+using AniDroid.Adapters.ViewModels;
 using AniDroid.AniList.Interfaces;
 using AniDroid.AniList.Models;
 using AniDroid.Base;
@@ -35,6 +38,10 @@ namespace AniDroid.Home
         public override string FragmentName => HomeFragmentName;
         protected override IReadOnlyKernel Kernel => new StandardKernel(new ApplicationModule<IHomeView, HomeFragment>(this));
 
+        private Color UserNameColor => new Color(Activity.GetThemedColor(Resource.Attribute.Primary));
+        private Color AccentColor => new Color(Activity.GetThemedColor(Resource.Attribute.Primary_Dark));
+        private Color DefaultIconColor => new Color(Activity.GetThemedColor(Resource.Attribute.Secondary_Dark));
+
         public static HomeFragment GetInstance() => _instance;
 
         protected override void SetInstance(BaseMainActivityFragment instance)
@@ -58,8 +65,11 @@ namespace AniDroid.Home
 
             _recyclerAdapter = _recyclerAdapter != null
                 ? new AniListActivityRecyclerAdapter(Activity, _recyclerAdapter)
-                : new AniListActivityRecyclerAdapter(Activity, Presenter,
-                    Presenter.GetAniListActivity(_isFollowingOnly), Presenter.GetUserId());
+                : new AniListActivityRecyclerAdapter(Activity, Presenter.GetAniListActivity(_isFollowingOnly),
+                    Presenter.GetUserId(), Presenter,
+                    viewModel =>
+                        AniListActivityViewModel.CreateViewModel(viewModel, Activity, Presenter.GetUserId(),
+                            UserNameColor, AccentColor));
 
             _recyclerView.SetAdapter(_recyclerAdapter);
 
@@ -87,8 +97,12 @@ namespace AniDroid.Home
                     return true;
                 case Resource.Id.Menu_Home_ToggleActivityType:
                     _isFollowingOnly = !_isFollowingOnly;
-                    _recyclerAdapter = new AniListActivityRecyclerAdapter(Activity, Presenter,
-                        Presenter.GetAniListActivity(_isFollowingOnly), Presenter.GetUserId());
+                    _recyclerAdapter = new AniListActivityRecyclerAdapter(Activity,
+                        Presenter.GetAniListActivity(_isFollowingOnly),
+                        Presenter.GetUserId(), Presenter,
+                        viewModel =>
+                            AniListActivityViewModel.CreateViewModel(viewModel, Activity, Presenter.GetUserId(),
+                                UserNameColor, AccentColor));
                     _recyclerView.SetAdapter(_recyclerAdapter);
                     SetActivityIcon(item);
                     return true;
@@ -105,7 +119,10 @@ namespace AniDroid.Home
         public void ShowUserActivity(IAsyncEnumerable<OneOf<IPagedData<AniListActivity>, IAniListError>> activityEnumerable, int userId)
         {
             var recycler = View.FindViewById<RecyclerView>(Resource.Id.List_RecyclerView);
-            recycler.SetAdapter(_recyclerAdapter = new AniListActivityRecyclerAdapter(Activity, Presenter, activityEnumerable, userId));
+            recycler.SetAdapter(_recyclerAdapter = new AniListActivityRecyclerAdapter(Activity,
+                activityEnumerable, userId, Presenter, viewModel =>
+                    AniListActivityViewModel.CreateViewModel(viewModel, Activity, Presenter.GetUserId(), UserNameColor,
+                        AccentColor)));
         }
 
         public void ShowAllActivity(IAsyncEnumerable<OneOf<IPagedData<AniListActivity>, IAniListError>> activityEnumerable, int userIUd)
@@ -115,7 +132,7 @@ namespace AniDroid.Home
 
         public void UpdateActivity(int activityPosition, AniListActivity activity)
         {
-            _recyclerAdapter.Items[activityPosition] = activity;
+            //_recyclerAdapter.Items[activityPosition] = activity;
             _recyclerAdapter.NotifyItemChanged(activityPosition);
         }
 

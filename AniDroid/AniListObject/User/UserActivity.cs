@@ -44,7 +44,7 @@ namespace AniDroid.AniListObject.User
         private bool _isFollowing;
         private int? _userId;
         private string _userName;
-        private AniListActivityRecyclerAdapter _userActivityRecyclerAdapter;
+        private AniListActivityRecyclerAdapterOld _userActivityRecyclerAdapter;
 
         protected override IReadOnlyKernel Kernel =>
             new StandardKernel(new ApplicationModule<IUserView, UserActivity>(this));
@@ -161,7 +161,7 @@ namespace AniDroid.AniListObject.User
             var userActivityEnumerable = Presenter.GetUserActivityEnumerable(userId, PageLength);
             var retView = LayoutInflater.Inflate(Resource.Layout.View_List, null);
             var recycler = retView.FindViewById<RecyclerView>(Resource.Id.List_RecyclerView);
-            _userActivityRecyclerAdapter = new AniListActivityRecyclerAdapter(this, Presenter, userActivityEnumerable, Presenter.GetCurrentUserId());
+            _userActivityRecyclerAdapter = new AniListActivityRecyclerAdapterOld(this, Presenter, userActivityEnumerable, Presenter.GetCurrentUserId());
             recycler.SetAdapter(_userActivityRecyclerAdapter);
 
             return retView;
