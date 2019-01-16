@@ -22,11 +22,14 @@ namespace AniDroid.Utils.Formatting.Markdown
 
         private static readonly Regex ImageRegex = new Regex(@"img(\d*)\(([^\)]*)\)", RegexOptions.Compiled);
         private static readonly Regex YoutubeRegex = new Regex(@"youtube\(([^\)]*)\)", RegexOptions.Compiled);
+        private static readonly Regex SpoilerRegex =
+            new Regex(@"\~\!((?!\~\!).)*\!\~", RegexOptions.Compiled | RegexOptions.Singleline);
 
         public static void FormatMarkdownSpannable(Context context, ISpannable spannable)
         {
             FormatImages(context, spannable);
             FormatYoutube(context, spannable);
+            FormatSpoilers(spannable);
         }
 
         private static void FormatImages(Context context, ISpannable spannable)
@@ -112,6 +115,25 @@ namespace AniDroid.Utils.Formatting.Markdown
                 Picasso.Get().Load(string.Format(YoutubeThumbnailUrl, match.Groups[1].Value))
                     .Into(new DrawableTarget(spannable, match.Index, match.Index + match.Length,
                         (int) (250 * context.Resources.DisplayMetrics.Density), playIcon));
+            }
+        }
+
+        private static void FormatSpoilers(ISpannable spannable)
+        {
+            var text = spannable?.ToString();
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return;
+            }
+
+            var matches = SpoilerRegex.Matches(text);
+
+            foreach (var match in matches.ToList())
+            {
+                var spoilerSpan = new SpannableStringBuilder("Spoiler", match.Index, match.Index + match.Length);
+
+                spannable.SetSpan(spoilerSpan, match.Index, match.Index + match.Length, SpanTypes.Composing);
             }
         }
 

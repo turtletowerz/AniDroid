@@ -183,7 +183,7 @@ namespace AniDroid.AniListObject.User
                     var builder = new SpannableStringBuilder(MarkdownTextCleaner.ConvertToSpanned(user.About));
                     textView.MovementMethod = LinkMovementMethod.Instance;
                     textView.SetText(builder, TextView.BufferType.Spannable);
-                    MarkdownSpannableFormatter.FormatMarkdownSpannable(this, textView.TextFormatted as SpannableString);
+                    MarkdownSpannableFormatter.FormatMarkdownSpannable(this, textView.TextFormatted as ISpannable);
                 };
             }
             else
